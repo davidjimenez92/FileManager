@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace FileManager.Common.Layer
 {
-    public class Class1
+    public enum EnumTypes
     {
+        XML = 1,
+        JSON = 2, 
+        TXT = 3
     }
 }
