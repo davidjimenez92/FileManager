@@ -145,6 +145,7 @@ namespace FileManager.Presentation.WinSite
 			this.btnRead.TabIndex = 11;
 			this.btnRead.Text = "Read";
 			this.btnRead.UseVisualStyleBackColor = true;
+			this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
 			// 
 			// btnUpdate
 			// 
@@ -184,7 +185,7 @@ namespace FileManager.Presentation.WinSite
 			this.Controls.Add(this.lblName);
 			this.Controls.Add(this.lblStudent);
 			this.Name = "Form1";
-			this.Text = "Form1";
+			this.Text = "File Manager";
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();

@@ -35,7 +35,20 @@ namespace FileManager.DataAccess.Data
 
 		public List<Student> Get()
 		{
-			throw new NotImplementedException();
+			List<Student> list = new List<Student>();
+			if (File.Exists(path))
+			{
+				using (StreamReader streamReader = new StreamReader(path))
+				{
+					while (!streamReader.EndOfStream)
+					{
+						string[] values = streamReader.ReadLine().Split(',');
+						list.Add(new Student(int.Parse(values[0]), values[1], values[2], DateTime.Parse(values[3])));
+					}
+				}
+			}
+
+			return list;
 		}
 
 		public Student Update(Student student)

@@ -14,6 +14,8 @@ namespace FileManager.Presentation.WinSite
 {
 	public partial class Form1 : Form
 	{
+		private const string TITLE = "File Manager";
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -30,33 +32,76 @@ namespace FileManager.Presentation.WinSite
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			Student student = new Student(int.Parse(tbId.Text), tbName.Text, tbSurname.Text, dpDate.Value);
-			MessageBox.Show(cbType.SelectedItem.ToString());
-			switch (cbType.SelectedItem.ToString())
+
+			try
 			{
-				case "TXT":
-					TxtFactory txtfactory = new TxtFactory();
-					var studentTxt = txtfactory.Add(student);
-					if ( studentTxt != null)
-						MessageBox.Show(studentTxt + " added");
-					else
-						MessageBox.Show("Student: " + student.Id + " already exists");
-					break;
-				case "XML":
-					XmlFactory xmlFactory = new XmlFactory();
-					var studentXml = xmlFactory.Add(student);
-					if(studentXml != null)
-						MessageBox.Show(studentXml + " added");
-					else
-						MessageBox.Show("Student: " + student.Id + " already exists");
-					break;
-				case "JSON":
-					JsonFactory jsonFactory = new JsonFactory();
-					MessageBox.Show(jsonFactory.Add(student).ToString() + " added");
-					break;
-				default:
-					break;
+				switch (cbType.SelectedItem.ToString())
+				{
+					case "TXT":
+						TxtFactory txtfactory = new TxtFactory();
+						var studentTxt = txtfactory.Add(student);
+						if (studentTxt != null)
+							MessageBox.Show(studentTxt + " added", TITLE);
+						else
+							MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
+						break;
+					case "XML":
+						XmlFactory xmlFactory = new XmlFactory();
+						var studentXml = xmlFactory.Add(student);
+						if (studentXml != null)
+							MessageBox.Show(studentXml + " added", TITLE);
+						else
+							MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
+						break;
+					case "JSON":
+						JsonFactory jsonFactory = new JsonFactory();
+						MessageBox.Show(jsonFactory.Add(student).ToString() + " added", TITLE);
+						break;
+					default:
+						break;
+				}
+			}
+			catch (NullReferenceException nre)
+			{
+				cbType.Focus();
+				MessageBox.Show("Select someone type", TITLE);
 			}
 			
+		}
+
+		private void btnRead_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				switch (cbType.SelectedItem.ToString())
+				{
+					case "TXT":
+						TxtFactory txtFactory = new TxtFactory();
+						ShowStudents(txtFactory.Get());
+						break;
+					case "XML":
+						XmlFactory xmlFactory = new XmlFactory();
+						ShowStudents(xmlFactory.Get());
+						break;
+					default:
+						break;
+				}
+			}
+			catch (NullReferenceException nre)
+			{
+				cbType.Focus();
+				MessageBox.Show("Select someone type", TITLE);
+			}
+		}
+
+		private void ShowStudents(List<Student> list)
+		{
+			string message = "";
+			foreach (var item in list)
+			{
+				message += item + "\n";
+			}
+			MessageBox.Show(message, TITLE);
 		}
 	}
 }

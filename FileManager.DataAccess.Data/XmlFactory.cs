@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Xml.Linq;
 using FileManager.Common.Layer;
@@ -40,7 +42,19 @@ namespace FileManager.DataAccess.Data
 
 		public List<Student> Get()
 		{
-			throw new NotImplementedException();
+			List<Student> list = new List<Student>();
+			if (File.Exists(path))
+			{
+				XDocument doc = XDocument.Load(path);
+				foreach (var item in doc.Element("Students").Elements("Student"))
+				{
+					Student student = new Student(int.Parse(item.Element("Id").Value), item.Element("Name").Value, 
+						item.Element("Surname").Value, DateTime.Parse(item.Element("DateOfBirth").Value));
+					list.Add(student);
+				}
+			}
+
+			return list;
 		}
 
 		public Student Update(Student student)
