@@ -20,5 +20,10 @@ namespace FileManager.Common.Layer
 			Surname = surname;
 			DateOfBirth = dateOfBirth;
 		}
+
+		public override string ToString()
+		{
+			return "id: " + Id + ", Name: " + Name + ", Surname: " + ", Date of birht: " + DateOfBirth.ToString("dd/MM/yyyy"); 
+		}
 	}
 }

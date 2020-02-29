@@ -5,7 +5,7 @@ namespace FileManager.DataAccess.Data
 {
     public interface IFileFactory
     {
-        Student Add(Student studen);
+        Student Add(Student student);
 
         List<Student> Get();
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileManager.Common.Layer;
+using FileManager.DataAccess.Data;
 
 namespace FileManager.Presentation.WinSite
 {
@@ -26,5 +27,36 @@ namespace FileManager.Presentation.WinSite
 			}
 		}
 
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+			Student student = new Student(int.Parse(tbId.Text), tbName.Text, tbSurname.Text, dpDate.Value);
+			MessageBox.Show(cbType.SelectedItem.ToString());
+			switch (cbType.SelectedItem.ToString())
+			{
+				case "TXT":
+					TxtFactory txtfactory = new TxtFactory();
+					var studentTxt = txtfactory.Add(student);
+					if ( studentTxt != null)
+						MessageBox.Show(studentTxt + " added");
+					else
+						MessageBox.Show("Student: " + student.Id + " already exists");
+					break;
+				case "XML":
+					XmlFactory xmlFactory = new XmlFactory();
+					var studentXml = xmlFactory.Add(student);
+					if(studentXml != null)
+						MessageBox.Show(studentXml + " added");
+					else
+						MessageBox.Show("Student: " + student.Id + " already exists");
+					break;
+				case "JSON":
+					JsonFactory jsonFactory = new JsonFactory();
+					MessageBox.Show(jsonFactory.Add(student).ToString() + " added");
+					break;
+				default:
+					break;
+			}
+			
+		}
 	}
 }

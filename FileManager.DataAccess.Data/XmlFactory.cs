@@ -1,17 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
+using System.IO;
+using System.Xml.Linq;
 using FileManager.Common.Layer;
 
 namespace FileManager.DataAccess.Data
 {
-	class XmlFactory : IFileFactory
+	public class XmlFactory : IFileFactory
 	{
-		public Student Add(Student studen)
+
+		public string path = ConfigurationManager.AppSettings.Get("xmlFile");
+		public Student Add(Student student)
 		{
-			throw new NotImplementedException();
+			if (!File.Exists(path))
+			{
+				new XDocument(
+					new XElement("Students",
+					new XElement("Student",
+					new XElement("Id", student.Id),
+					new XElement("Name", student.Name),
+					new XElement("Surname", student.Surname),
+					new XElement("DateOfBirth", student.DateOfBirth.ToString("dd/MM/yyyy"))
+					)
+					)
+				).Save(path);
+			}
+			else
+			{
+				student = AppendStudent(student);
+			}
+			return student;
 		}
 
 		public bool Delete(Student student)
@@ -28,5 +47,34 @@ namespace FileManager.DataAccess.Data
 		{
 			throw new NotImplementedException();
 		}
+
+		private Student AppendStudent(Student student)
+		{
+			if (!GetIds().Contains(student.Id))
+			{
+				XDocument doc = XDocument.Load(path);
+				XElement child = new XElement("Student");
+				child.Add(new XElement("Id", student.Id.ToString()));
+				child.Add(new XElement("Name", student.Name.ToString()));
+				child.Add(new XElement("Surname", student.Surname.ToString()));
+				child.Add(new XElement("DateOfBirth", student.DateOfBirth.ToString("dd/MM/yyyy")));
+				doc.Root.Add(child);
+				doc.Save(path);
+				return student;
+			}
+			else
+				return null;
+		}
+		private List<int> GetIds()
+		{
+			List<int> list = new List<int>();
+			XDocument doc = XDocument.Load(path);
+			foreach (var item in doc.Element("Students").Elements("Student").Elements("Id"))
+			{
+				list.Add(int.Parse(item.Value));
+			}
+			return list;
+		}
+
 	}
 }
