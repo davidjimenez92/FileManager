@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FileManager.Common.Layer;
 
 namespace FileManager.Presentation.WinSite
 {
@@ -16,5 +17,14 @@ namespace FileManager.Presentation.WinSite
 		{
 			InitializeComponent();
 		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			foreach (var item in Enum.GetValues(typeof(EnumTypes)))
+			{
+				cbType.Items.Add(item);
+			}
+		}
+
 	}
 }

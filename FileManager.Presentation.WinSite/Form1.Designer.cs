@@ -1,4 +1,6 @@
-﻿namespace FileManager.Presentation.WinSite
+﻿using FileManager.Common.Layer;
+
+namespace FileManager.Presentation.WinSite
 {
 	partial class Form1
 	{
@@ -38,6 +40,10 @@
 			this.tbName = new System.Windows.Forms.TextBox();
 			this.cbType = new System.Windows.Forms.ComboBox();
 			this.dpDate = new System.Windows.Forms.DateTimePicker();
+			this.btnSave = new System.Windows.Forms.Button();
+			this.btnRead = new System.Windows.Forms.Button();
+			this.btnUpdate = new System.Windows.Forms.Button();
+			this.btnDelete = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// lblStudent
@@ -121,11 +127,51 @@
 			this.dpDate.Size = new System.Drawing.Size(270, 22);
 			this.dpDate.TabIndex = 9;
 			// 
+			// btnSave
+			// 
+			this.btnSave.Location = new System.Drawing.Point(227, 406);
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Size = new System.Drawing.Size(75, 23);
+			this.btnSave.TabIndex = 10;
+			this.btnSave.Text = "Save";
+			this.btnSave.UseVisualStyleBackColor = true;
+			// 
+			// btnRead
+			// 
+			this.btnRead.Location = new System.Drawing.Point(308, 406);
+			this.btnRead.Name = "btnRead";
+			this.btnRead.Size = new System.Drawing.Size(75, 23);
+			this.btnRead.TabIndex = 11;
+			this.btnRead.Text = "Read";
+			this.btnRead.UseVisualStyleBackColor = true;
+			// 
+			// btnUpdate
+			// 
+			this.btnUpdate.Location = new System.Drawing.Point(389, 406);
+			this.btnUpdate.Name = "btnUpdate";
+			this.btnUpdate.Size = new System.Drawing.Size(75, 23);
+			this.btnUpdate.TabIndex = 12;
+			this.btnUpdate.Text = "Update";
+			this.btnUpdate.UseVisualStyleBackColor = true;
+			// 
+			// btnDelete
+			// 
+			this.btnDelete.Location = new System.Drawing.Point(470, 406);
+			this.btnDelete.Name = "btnDelete";
+			this.btnDelete.Size = new System.Drawing.Size(75, 23);
+			this.btnDelete.TabIndex = 13;
+			this.btnDelete.Text = "Delete";
+			this.btnDelete.UseVisualStyleBackColor = true;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btnDelete);
+			this.Controls.Add(this.btnUpdate);
+			this.Controls.Add(this.btnRead);
+			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.dpDate);
 			this.Controls.Add(this.cbType);
 			this.Controls.Add(this.tbName);
@@ -138,6 +184,7 @@
 			this.Controls.Add(this.lblStudent);
 			this.Name = "Form1";
 			this.Text = "Form1";
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -155,6 +202,10 @@
 		private System.Windows.Forms.TextBox tbName;
 		private System.Windows.Forms.ComboBox cbType;
 		private System.Windows.Forms.DateTimePicker dpDate;
+		private System.Windows.Forms.Button btnSave;
+		private System.Windows.Forms.Button btnRead;
+		private System.Windows.Forms.Button btnUpdate;
+		private System.Windows.Forms.Button btnDelete;
 	}
 }
 
