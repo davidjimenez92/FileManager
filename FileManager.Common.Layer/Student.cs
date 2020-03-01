@@ -21,9 +21,14 @@ namespace FileManager.Common.Layer
 			DateOfBirth = dateOfBirth;
 		}
 
+		public Student(int id)
+		{
+			Id = id;
+		}
+
 		public override string ToString()
 		{
-			return "id: " + Id + ", Name: " + Name + ", Surname: " + ", Date of birht: " + DateOfBirth.ToString("dd/MM/yyyy"); 
+			return "id: " + Id + ", Name: " + Name + ", Surname: " + Surname + ", Date of birht: " + DateOfBirth.ToString("dd/MM/yyyy"); 
 		}
 	}
 }

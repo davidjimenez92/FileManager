@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileManager.Common.Layer;
 using FileManager.DataAccess.Data;
@@ -66,7 +60,7 @@ namespace FileManager.Presentation.WinSite
 				cbType.Focus();
 				MessageBox.Show("Select someone type", TITLE);
 			}
-			
+
 		}
 
 		private void btnRead_Click(object sender, EventArgs e)
@@ -76,12 +70,74 @@ namespace FileManager.Presentation.WinSite
 				switch (cbType.SelectedItem.ToString())
 				{
 					case "TXT":
-						TxtFactory txtFactory = new TxtFactory();
+						IFileFactory txtFactory = new TxtFactory();
 						ShowStudents(txtFactory.Get());
 						break;
 					case "XML":
-						XmlFactory xmlFactory = new XmlFactory();
+						IFileFactory xmlFactory = new XmlFactory();
 						ShowStudents(xmlFactory.Get());
+						break;
+					default:
+						break;
+				}
+			}
+			catch (NullReferenceException nre)
+			{
+				cbType.Focus();
+				MessageBox.Show("Select someone type", TITLE);
+			}
+		}
+
+		private void btnUpdate_Click(object sender, EventArgs e)
+		{
+			Student student = new Student(int.Parse(tbId.Text), tbName.Text, tbSurname.Text, dpDate.Value);
+			try
+			{
+				switch (cbType.SelectedItem.ToString())
+				{
+					case "TXT":
+						IFileFactory txtFactory = new TxtFactory();
+						var resultTxt = txtFactory.Update(student);
+						if (resultTxt != null)
+							MessageBox.Show("Student id: " + student.Id + " updated", "File Manager");
+						break;
+					case "XML":
+						IFileFactory xmlFactory = new XmlFactory();
+						var resultXml = xmlFactory.Update(student);
+						if (resultXml != null)
+							MessageBox.Show("Student id: " + student.Id + " updated", "File Manager");
+						break;
+					default:
+						break;
+				}
+			}
+			catch (NullReferenceException nre)
+			{
+				cbType.Focus();
+				MessageBox.Show("Select someone type", TITLE);
+			}
+		}
+
+		private void btnDelete_Click(object sender, EventArgs e)
+		{
+			Student student = new Student(int.Parse(tbId.Text));
+			try
+			{
+				switch (cbType.SelectedItem.ToString())
+				{
+					case "TXT":
+						IFileFactory txtFactory = new TxtFactory();
+						if (txtFactory.Delete(student))
+							MessageBox.Show("Student id: " + student.Id + " deleted", "File Manager");
+						else
+							MessageBox.Show("Student id: " + student.Id + " can not delete", "File Manager");
+						break;
+					case "XML":
+						IFileFactory xmlFactory = new XmlFactory();
+						if (xmlFactory.Delete(student))
+							MessageBox.Show("Student id: " + student.Id + " deleted", "File Manager");
+						else
+							MessageBox.Show("Student id: " + student.Id + " can not delete", "File Manager");
 						break;
 					default:
 						break;

@@ -37,7 +37,22 @@ namespace FileManager.DataAccess.Data
 
 		public bool Delete(Student student)
 		{
-			throw new NotImplementedException();
+			if (File.Exists(path))
+			{
+				List<Student> lista = Get();
+				if (GetIds().Contains(student.Id))
+				{
+					int studentOfList = Get().FindIndex(std => std.Id == student.Id);
+					lista.RemoveAt(studentOfList);
+					File.Delete(path);
+					foreach (var item in lista)
+					{
+						Add(item);
+					}
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public List<Student> Get()
@@ -59,7 +74,27 @@ namespace FileManager.DataAccess.Data
 
 		public Student Update(Student student)
 		{
-			throw new NotImplementedException();
+			if (File.Exists(path))
+			{
+				List<Student> lista = Get();
+				if (GetIds().Contains(student.Id))
+				{
+					int studentOfList = Get().FindIndex(std => std.Id == student.Id);
+					lista.RemoveAt(studentOfList);
+					lista.Add(student);
+					File.Delete(path);
+					foreach (var item in lista)
+					{
+						Add(item);
+					}
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			return student;
 		}
 
 		private Student AppendStudent(Student student)
