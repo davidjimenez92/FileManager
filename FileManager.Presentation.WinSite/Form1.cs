@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows.Forms;
 using FileManager.Common.Layer;
 using FileManager.DataAccess.Data;
@@ -25,42 +26,44 @@ namespace FileManager.Presentation.WinSite
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			Student student = new Student(int.Parse(tbId.Text), tbName.Text, tbSurname.Text, dpDate.Value);
 
-			try
+			Student student = CreateStudent();
+			if (student != null)
 			{
-				switch (cbType.SelectedItem.ToString())
+				try
 				{
-					case "TXT":
-						TxtFactory txtfactory = new TxtFactory();
-						var studentTxt = txtfactory.Add(student);
-						if (studentTxt != null)
-							MessageBox.Show(studentTxt + " added", TITLE);
-						else
-							MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
-						break;
-					case "XML":
-						XmlFactory xmlFactory = new XmlFactory();
-						var studentXml = xmlFactory.Add(student);
-						if (studentXml != null)
-							MessageBox.Show(studentXml + " added", TITLE);
-						else
-							MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
-						break;
-					case "JSON":
-						JsonFactory jsonFactory = new JsonFactory();
-						MessageBox.Show(jsonFactory.Add(student).ToString() + " added", TITLE);
-						break;
-					default:
-						break;
+					switch (cbType.SelectedItem.ToString())
+					{
+						case "TXT":
+							IFileFactory txtfactory = new TxtFactory();
+							var studentTxt = txtfactory.Add(student);
+							if (studentTxt != null)
+								MessageBox.Show(studentTxt + " added", TITLE);
+							else
+								MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
+							break;
+						case "XML":
+							IFileFactory xmlFactory = new XmlFactory();
+							var studentXml = xmlFactory.Add(student);
+							if (studentXml != null)
+								MessageBox.Show(studentXml + " added", TITLE);
+							else
+								MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
+							break;
+						case "JSON":
+							IFileFactory jsonFactory = new JsonFactory();
+							MessageBox.Show(jsonFactory.Add(student).ToString() + " added", TITLE);
+							break;
+						default:
+							break;
+					}
+				}
+				catch (NullReferenceException nre)
+				{
+					cbType.Focus();
+					MessageBox.Show("Select someone type", TITLE);
 				}
 			}
-			catch (NullReferenceException nre)
-			{
-				cbType.Focus();
-				MessageBox.Show("Select someone type", TITLE);
-			}
-
 		}
 
 		private void btnRead_Click(object sender, EventArgs e)
@@ -152,12 +155,27 @@ namespace FileManager.Presentation.WinSite
 
 		private void ShowStudents(List<Student> list)
 		{
-			string message = "";
+			StringBuilder message = new StringBuilder();
 			foreach (var item in list)
 			{
-				message += item + "\n";
+				message.Append(item + "\n");
 			}
-			MessageBox.Show(message, TITLE);
+			MessageBox.Show(message.ToString(), TITLE);
+		}
+
+		private Student CreateStudent()
+		{
+			try
+			{
+				Student student = new Student(int.Parse(tbId.Text), tbName.Text, tbSurname.Text, dpDate.Value);
+				return student;
+
+			}
+			catch (FormatException fe)
+			{
+				MessageBox.Show(tbId.Text + " is a invalid id, try with another id", "File Manager");
+				return null;
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using FileManager.Common.Layer;
 
@@ -39,16 +40,12 @@ namespace FileManager.DataAccess.Data
 		{
 			if (File.Exists(path))
 			{
-				List<Student> lista = Get();
-				if (GetIds().Contains(student.Id))
+				XDocument doc = XDocument.Load(path);
+				IEnumerable<XElement> list = doc.Root.Elements("Student").Where(e => e.Element("Id").Value.Equals(student.Id.ToString()));
+				if (list.Count() > 0)
 				{
-					int studentOfList = Get().FindIndex(std => std.Id == student.Id);
-					lista.RemoveAt(studentOfList);
-					File.Delete(path);
-					foreach (var item in lista)
-					{
-						Add(item);
-					}
+					list.Remove();
+					doc.Save(path);
 					return true;
 				}
 			}
@@ -63,7 +60,7 @@ namespace FileManager.DataAccess.Data
 				XDocument doc = XDocument.Load(path);
 				foreach (var item in doc.Element("Students").Elements("Student"))
 				{
-					Student student = new Student(int.Parse(item.Element("Id").Value), item.Element("Name").Value, 
+					Student student = new Student(int.Parse(item.Element("Id").Value), item.Element("Name").Value,
 						item.Element("Surname").Value, DateTime.Parse(item.Element("DateOfBirth").Value));
 					list.Add(student);
 				}
@@ -76,25 +73,20 @@ namespace FileManager.DataAccess.Data
 		{
 			if (File.Exists(path))
 			{
-				List<Student> lista = Get();
-				if (GetIds().Contains(student.Id))
+				XDocument doc = XDocument.Load(path);
+				IEnumerable<XElement> list = doc.Root.Elements("Student").Where(e => e.Element("Id").Value.Equals(student.Id.ToString()));
+				if (list.Count() > 0)
 				{
-					int studentOfList = Get().FindIndex(std => std.Id == student.Id);
-					lista.RemoveAt(studentOfList);
-					lista.Add(student);
-					File.Delete(path);
-					foreach (var item in lista)
-					{
-						Add(item);
-					}
-				}
-				else
-				{
-					return null;
+					list.Elements("Name").FirstOrDefault().Value = student.Name;
+					list.Elements("Surname").FirstOrDefault().Value = student.Surname;
+					list.Elements("DateOfBirth").FirstOrDefault().Value = student.DateOfBirth.ToString("dd/MM/yyyy");
+
+					doc.Save(path);
+					return student;
 				}
 			}
 
-			return student;
+			return null;
 		}
 
 		private Student AppendStudent(Student student)
@@ -111,8 +103,8 @@ namespace FileManager.DataAccess.Data
 				doc.Save(path);
 				return student;
 			}
-			else
-				return null;
+
+			return null;
 		}
 		private List<int> GetIds()
 		{
