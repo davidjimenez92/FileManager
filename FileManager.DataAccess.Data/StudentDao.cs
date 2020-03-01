@@ -3,7 +3,7 @@ using FileManager.Common.Layer;
 
 namespace FileManager.DataAccess.Data
 {
-    public interface IFileFactory
+    public interface StudentDao
     {
         Student Add(Student student);
 
