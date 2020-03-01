@@ -24,7 +24,7 @@ namespace FileManager.Presentation.WinSite
 			}
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private void BtnSave_Click(object sender, EventArgs e)
 		{
 
 			Student student = CreateStudent();
@@ -35,7 +35,7 @@ namespace FileManager.Presentation.WinSite
 					switch (cbType.SelectedItem.ToString())
 					{
 						case "TXT":
-							IFileFactory txtfactory = new TxtFactory();
+							StudentDao txtfactory = new TxtFactory();
 							var studentTxt = txtfactory.Add(student);
 							if (studentTxt != null)
 								MessageBox.Show(studentTxt + " added", TITLE);
@@ -43,7 +43,7 @@ namespace FileManager.Presentation.WinSite
 								MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
 							break;
 						case "XML":
-							IFileFactory xmlFactory = new XmlFactory();
+							StudentDao xmlFactory = new XmlFactory();
 							var studentXml = xmlFactory.Add(student);
 							if (studentXml != null)
 								MessageBox.Show(studentXml + " added", TITLE);
@@ -51,7 +51,7 @@ namespace FileManager.Presentation.WinSite
 								MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
 							break;
 						case "JSON":
-							IFileFactory jsonFactory = new JsonFactory();
+							StudentDao jsonFactory = new JsonFactory();
 							MessageBox.Show(jsonFactory.Add(student).ToString() + " added", TITLE);
 							break;
 						default:
@@ -66,18 +66,18 @@ namespace FileManager.Presentation.WinSite
 			}
 		}
 
-		private void btnRead_Click(object sender, EventArgs e)
+		private void BtnRead_Click(object sender, EventArgs e)
 		{
 			try
 			{
 				switch (cbType.SelectedItem.ToString())
 				{
 					case "TXT":
-						IFileFactory txtFactory = new TxtFactory();
+						StudentDao txtFactory = new TxtFactory();
 						ShowStudents(txtFactory.Get());
 						break;
 					case "XML":
-						IFileFactory xmlFactory = new XmlFactory();
+						StudentDao xmlFactory = new XmlFactory();
 						ShowStudents(xmlFactory.Get());
 						break;
 					default:
@@ -91,7 +91,7 @@ namespace FileManager.Presentation.WinSite
 			}
 		}
 
-		private void btnUpdate_Click(object sender, EventArgs e)
+		private void BtnUpdate_Click(object sender, EventArgs e)
 		{
 			Student student = new Student(int.Parse(tbId.Text), tbName.Text, tbSurname.Text, dpDate.Value);
 			try
@@ -99,13 +99,13 @@ namespace FileManager.Presentation.WinSite
 				switch (cbType.SelectedItem.ToString())
 				{
 					case "TXT":
-						IFileFactory txtFactory = new TxtFactory();
+						StudentDao txtFactory = new TxtFactory();
 						var resultTxt = txtFactory.Update(student);
 						if (resultTxt != null)
 							MessageBox.Show("Student id: " + student.Id + " updated", "File Manager");
 						break;
 					case "XML":
-						IFileFactory xmlFactory = new XmlFactory();
+						StudentDao xmlFactory = new XmlFactory();
 						var resultXml = xmlFactory.Update(student);
 						if (resultXml != null)
 							MessageBox.Show("Student id: " + student.Id + " updated", "File Manager");
@@ -121,7 +121,7 @@ namespace FileManager.Presentation.WinSite
 			}
 		}
 
-		private void btnDelete_Click(object sender, EventArgs e)
+		private void BtnDelete_Click(object sender, EventArgs e)
 		{
 			Student student = new Student(int.Parse(tbId.Text));
 			try
@@ -129,14 +129,14 @@ namespace FileManager.Presentation.WinSite
 				switch (cbType.SelectedItem.ToString())
 				{
 					case "TXT":
-						IFileFactory txtFactory = new TxtFactory();
+						StudentDao txtFactory = new TxtFactory();
 						if (txtFactory.Delete(student))
 							MessageBox.Show("Student id: " + student.Id + " deleted", "File Manager");
 						else
 							MessageBox.Show("Student id: " + student.Id + " can not delete", "File Manager");
 						break;
 					case "XML":
-						IFileFactory xmlFactory = new XmlFactory();
+						StudentDao xmlFactory = new XmlFactory();
 						if (xmlFactory.Delete(student))
 							MessageBox.Show("Student id: " + student.Id + " deleted", "File Manager");
 						else

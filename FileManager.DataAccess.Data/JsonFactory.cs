@@ -4,24 +4,21 @@ using System.Configuration;
 using System.IO;
 using FileManager.Common.Layer;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace FileManager.DataAccess.Data
 {
-	
-	public class JsonFactory : IFileFactory
+
+	public class JsonFactory : StudentDao
 	{
 		private readonly string path = ConfigurationManager.AppSettings.Get("jsonFile");
 		public Student Add(Student student)
 		{
-			List<Student> list = new List<Student>();
+			List<Student> list = Get();
 			if (!File.Exists(path))
 			{
-				list.Add(student);
 				using (StreamWriter streamWriter = new StreamWriter(path, true))
 				{
-					list.Add(student);
-					string JsonResult = JsonConvert.SerializeObject(list);
+					string JsonResult = JsonConvert.SerializeObject(student);
 					streamWriter.WriteLine(JsonResult.ToString());
 				}
 			}
@@ -35,8 +32,15 @@ namespace FileManager.DataAccess.Data
 
 		public List<Student> Get()
 		{
-			
-			throw new NotImplementedException();
+			List<Student> list = new List<Student>();
+			if (File.Exists(path))
+			{
+				string json = File.ReadAllText(path);
+				Student std = JsonConvert.DeserializeObject<Student>(json);
+				list.Add(std);
+
+			}
+			return list;
 		}
 
 		public Student Update(Student student)

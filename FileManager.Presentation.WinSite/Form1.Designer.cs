@@ -135,7 +135,7 @@ namespace FileManager.Presentation.WinSite
 			this.btnSave.TabIndex = 10;
 			this.btnSave.Text = "Save";
 			this.btnSave.UseVisualStyleBackColor = true;
-			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+			this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
 			// 
 			// btnRead
 			// 
@@ -145,7 +145,7 @@ namespace FileManager.Presentation.WinSite
 			this.btnRead.TabIndex = 11;
 			this.btnRead.Text = "Read";
 			this.btnRead.UseVisualStyleBackColor = true;
-			this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
+			this.btnRead.Click += new System.EventHandler(this.BtnRead_Click);
 			// 
 			// btnUpdate
 			// 
@@ -155,7 +155,7 @@ namespace FileManager.Presentation.WinSite
 			this.btnUpdate.TabIndex = 12;
 			this.btnUpdate.Text = "Update";
 			this.btnUpdate.UseVisualStyleBackColor = true;
-			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+			this.btnUpdate.Click += new System.EventHandler(this.BtnUpdate_Click);
 			// 
 			// btnDelete
 			// 
@@ -165,7 +165,7 @@ namespace FileManager.Presentation.WinSite
 			this.btnDelete.TabIndex = 13;
 			this.btnDelete.Text = "Delete";
 			this.btnDelete.UseVisualStyleBackColor = true;
-			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+			this.btnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
 			// 
 			// Form1
 			// 

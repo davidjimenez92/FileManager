@@ -10,10 +10,10 @@ using FileManager.Common.Layer;
 
 namespace FileManager.DataAccess.Data
 {
-	public class XmlFactory : IFileFactory
+	public class XmlFactory : StudentDao
 	{
 
-		public string path = ConfigurationManager.AppSettings.Get("xmlFile");
+		public readonly string path = ConfigurationManager.AppSettings.Get("xmlFile");
 		public Student Add(Student student)
 		{
 			if (!File.Exists(path))

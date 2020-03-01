@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using FileManager.Common.Layer;
+using log4net;
 
 namespace FileManager.DataAccess.Data
 {
-	public class TxtFactory : IFileFactory
+	public class TxtFactory : StudentDao
 	{
-		public string path = ConfigurationManager.AppSettings.Get("txtFile");
+		public readonly string path = ConfigurationManager.AppSettings.Get("txtFile");
+		private static readonly ILog logger = LogManager.GetLogger(typeof(TxtFactory));
 
 		public Student Add(Student student)
 		{
@@ -25,6 +27,7 @@ namespace FileManager.DataAccess.Data
 			{
 				student = AppendStudent(student, cadena);
 			}
+			logger.Info("Student :" + student.ToString() + " created");
 			return student;
 		}
 
@@ -42,6 +45,7 @@ namespace FileManager.DataAccess.Data
 					{
 						Add(item);
 					}
+					logger.Info("Student: " + student.Id + " Deleted");
 					return true;
 				}
 			}
@@ -59,7 +63,9 @@ namespace FileManager.DataAccess.Data
 					while (!streamReader.EndOfStream)
 					{
 						string[] values = streamReader.ReadLine().Split(',');
-						list.Add(new Student(int.Parse(values[0]), values[1], values[2], DateTime.Parse(values[3])));
+						Student student = new Student(int.Parse(values[0]), values[1], values[2], DateTime.Parse(values[3]));
+						list.Add(student);
+						logger.Info("Student: " + student.ToString());
 					}
 				}
 			}
@@ -82,14 +88,12 @@ namespace FileManager.DataAccess.Data
 					{
 						Add(item);
 					}
-				}
-				else
-				{
-					return null;
-				}
+					logger.Info("Student: " + student.ToString() + " updated");
+					return student;
+				}			
 			}
 
-			return student;
+			return null;
 		}
 
 		private Student AppendStudent(Student student, string cadena)
