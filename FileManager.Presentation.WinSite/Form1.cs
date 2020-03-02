@@ -13,6 +13,7 @@ namespace FileManager.Presentation.WinSite
 
 		public Form1()
 		{
+
 			InitializeComponent();
 		}
 
@@ -51,8 +52,7 @@ namespace FileManager.Presentation.WinSite
 								MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
 							break;
 						case "JSON":
-							StudentDao jsonFactory = new JsonFactory();
-							MessageBox.Show(jsonFactory.Add(student).ToString() + " added", TITLE);
+							MessageBox.Show("Not implemented", TITLE);
 							break;
 						default:
 							break;
@@ -79,6 +79,9 @@ namespace FileManager.Presentation.WinSite
 					case "XML":
 						StudentDao xmlFactory = new XmlFactory();
 						ShowStudents(xmlFactory.Get());
+						break;
+					case "JSON":
+						MessageBox.Show("Not implemented", TITLE);
 						break;
 					default:
 						break;
@@ -109,6 +112,9 @@ namespace FileManager.Presentation.WinSite
 						var resultXml = xmlFactory.Update(student);
 						if (resultXml != null)
 							MessageBox.Show("Student id: " + student.Id + " updated", "File Manager");
+						break;
+					case "JSON":
+						MessageBox.Show("Not implemented", TITLE);
 						break;
 					default:
 						break;
@@ -141,6 +147,9 @@ namespace FileManager.Presentation.WinSite
 							MessageBox.Show("Student id: " + student.Id + " deleted", "File Manager");
 						else
 							MessageBox.Show("Student id: " + student.Id + " can not delete", "File Manager");
+						break;
+					case "JSON":
+						MessageBox.Show("Not implemented", TITLE);
 						break;
 					default:
 						break;

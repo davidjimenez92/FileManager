@@ -13,15 +13,27 @@ namespace FileManager.DataAccess.Data
 		private readonly string path = ConfigurationManager.AppSettings.Get("jsonFile");
 		public Student Add(Student student)
 		{
-			List<Student> list = Get();
+			string json = "";
+			List<Student> list = new List<Student>();
 			if (!File.Exists(path))
 			{
-				using (StreamWriter streamWriter = new StreamWriter(path, true))
-				{
-					string JsonResult = JsonConvert.SerializeObject(student);
-					streamWriter.WriteLine(JsonResult.ToString());
-				}
+				list.Add(student);
+				json = JsonConvert.SerializeObject(list.ToArray());
+				File.WriteAllText(path, json);
 			}
+			else
+			{
+				using (StreamReader reader = new StreamReader(path))
+				{
+					json = reader.ReadToEnd();
+				}
+				list = JsonConvert.DeserializeObject<List<Student>>(json);
+
+				list.Add(student);
+				json = JsonConvert.SerializeObject(list);
+				File.WriteAllText(path, json);
+			}
+				
 			return student;
 		}
 
@@ -36,8 +48,7 @@ namespace FileManager.DataAccess.Data
 			if (File.Exists(path))
 			{
 				string json = File.ReadAllText(path);
-				Student std = JsonConvert.DeserializeObject<Student>(json);
-				list.Add(std);
+				list = JsonConvert.DeserializeObject<List<Student>>(json);
 
 			}
 			return list;

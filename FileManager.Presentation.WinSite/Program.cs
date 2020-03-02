@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using log4net.Config;
 
 namespace FileManager.Presentation.WinSite
 {
@@ -14,6 +15,7 @@ namespace FileManager.Presentation.WinSite
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Form1());
+			XmlConfigurator.Configure();
 		}
 	}
 }

@@ -58,7 +58,7 @@ namespace FileManager.DataAccess.Data
 			if (File.Exists(path))
 			{
 				XDocument doc = XDocument.Load(path);
-				foreach (var item in doc.Element("Students").Elements("Student"))
+				foreach (var item in doc.Root.Elements("Student"))
 				{
 					Student student = new Student(int.Parse(item.Element("Id").Value), item.Element("Name").Value,
 						item.Element("Surname").Value, DateTime.Parse(item.Element("DateOfBirth").Value));
