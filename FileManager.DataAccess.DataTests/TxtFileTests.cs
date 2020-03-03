@@ -5,19 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileManager.Common.Layer;
 
 namespace FileManager.DataAccess.Data.Tests
 {
 	[TestClass()]
-	public class XmlFactoryTests
+	public class TxtFileTests
 	{
 		[TestMethod()]
-		public void AddTest(TestContext context)
+		public void AddTest()
 		{
-			Student student = new Student(1, "David", "Jimenez", new DateTime(1992, 6, 24));
-			Student result = new XmlFile().Add(student);
-			Assert.IsTrue(student.Id.Equals(result.Id));
+			Assert.Fail();
+		}
+
+		[TestMethod()]
+		public void CreateFileTest()
+		{
+			Assert.Fail();
 		}
 
 		[TestMethod()]
