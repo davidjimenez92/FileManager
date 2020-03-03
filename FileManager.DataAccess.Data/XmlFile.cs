@@ -1,59 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using FileManager.Common.Layer;
+using log4net;
 
 namespace FileManager.DataAccess.Data
 {
 	public class XmlFile : VuelingFile
 	{
 		public readonly string path = ConfigurationManager.AppSettings.Get("xmlFile");
+		private static readonly ILog logger = LogManager.GetLogger(typeof(XmlFile));
 
-		public override void CreateFile()
-		{
-			new XDocument(new XElement("Students")).Save(path);
-		}
+		private XmlUtil xmlUtil = new XmlUtil();
 
 		public override Student Add(Student student)
 		{
-			if (!File.Exists(path))
-			{
-				CreateFile();
-			}
-			else
-			{
-				student = AppendStudent(student);
-			}
+			xmlUtil.CreateFile();
+			student = xmlUtil.AppendStudent(student);
+
 			return student;
 		}
 
 		public override bool Delete(Student student)
 		{
-			if (File.Exists(path))
+			XDocument doc = xmlUtil.LoadFile();
+			if (doc != null)
 			{
-				XDocument doc = XDocument.Load(path);
-				IEnumerable<XElement> list = doc.Root.Elements("Student").Where(e => e.Element("Id").Value.Equals(student.Id.ToString()));
-				if (list.Count() > 0)
-				{
-					list.Remove();
-					doc.Save(path);
-					return true;
-				}
+				XElement element = doc.Root.Elements("Student").SingleOrDefault(e => e.Element("Id").Value.Equals(student.Id.ToString()));
+				element.Remove();
+				doc.Save(path);
+				return true;
 			}
 			return false;
 		}
 
 		public override List<Student> Get()
 		{
+			XDocument doc = xmlUtil.LoadFile();
 			List<Student> list = new List<Student>();
-			if (File.Exists(path))
+			if (doc != null)
 			{
-				XDocument doc = XDocument.Load(path);
 				foreach (var item in doc.Root.Elements("Student"))
 				{
 					Student student = new Student(int.Parse(item.Element("Id").Value), item.Element("Name").Value,
@@ -61,57 +49,29 @@ namespace FileManager.DataAccess.Data
 					list.Add(student);
 				}
 			}
-
 			return list;
 		}
 
 		public override Student Update(Student student)
 		{
-			if (File.Exists(path))
+			XDocument doc = xmlUtil.LoadFile();
+			if (doc != null)
 			{
-				XDocument doc = XDocument.Load(path);
 				IEnumerable<XElement> list = doc.Root.Elements("Student").Where(e => e.Element("Id").Value.Equals(student.Id.ToString()));
-				if (list.Count() > 0)
-				{
-					list.Elements("Name").FirstOrDefault().Value = student.Name;
-					list.Elements("Surname").FirstOrDefault().Value = student.Surname;
-					list.Elements("DateOfBirth").FirstOrDefault().Value = student.DateOfBirth.ToString("dd/MM/yyyy");
 
-					doc.Save(path);
-					return student;
-				}
-			}
+				list.Elements("Name").FirstOrDefault().Value = student.Name;
+				list.Elements("Surname").FirstOrDefault().Value = student.Surname;
+				list.Elements("DateOfBirth").FirstOrDefault().Value = student.DateOfBirth.ToString("dd/MM/yyyy");
 
-			return null;
-		}
-
-		private Student AppendStudent(Student student)
-		{
-			if (!GetIds().Contains(student.Id))
-			{
-				XDocument doc = XDocument.Load(path);
-				XElement child = new XElement("Student");
-				child.Add(new XElement("Id", student.Id.ToString()));
-				child.Add(new XElement("Name", student.Name.ToString()));
-				child.Add(new XElement("Surname", student.Surname.ToString()));
-				child.Add(new XElement("DateOfBirth", student.DateOfBirth.ToString("dd/MM/yyyy")));
-				doc.Root.Add(child);
 				doc.Save(path);
 				return student;
 			}
-
+			logger.Info(student);
 			return null;
+
 		}
-		private List<int> GetIds()
-		{
-			List<int> list = new List<int>();
-			XDocument doc = XDocument.Load(path);
-			foreach (var item in doc.Element("Students").Elements("Student").Elements("Id"))
-			{
-				list.Add(int.Parse(item.Value));
-			}
-			return list;
-		}
+
+
 
 	}
 }

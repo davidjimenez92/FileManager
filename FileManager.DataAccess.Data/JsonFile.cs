@@ -46,11 +46,6 @@ namespace FileManager.DataAccess.Data
 
 		}
 
-		public override void CreateFile()
-		{
-			throw new NotImplementedException();
-		}
-
 		public override bool Delete(Student student)
 		{
 			if (File.Exists(path))
