@@ -51,7 +51,7 @@ namespace FileManager.Presentation.WinSite
 
 			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
 			VuelingFile file = factory.Create(ty);
-			ShowStudents(file.Get());
+			ShowStudents(file.GetAll());
 
 		}
 

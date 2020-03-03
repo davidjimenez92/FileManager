@@ -1,51 +1,63 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Text;
 using FileManager.Common.Layer;
 using log4net;
 
 namespace FileManager.DataAccess.Data
 {
-	class TxtUtil
+	public class TxtUtil
 	{
-		public readonly string path = ConfigurationManager.AppSettings.Get("txtFile");
-		private static readonly ILog logger = LogManager.GetLogger(typeof(TxtFile));
+        private readonly string path;
 
-		public void CreateFile()
-		{
-			if (IsFileExist())
-				using (File.Create(path)) ;
-		}
+        public TxtUtil(string path)
+        {
+            this.path = path;
+        }
 
-		public bool IsFileExist()
-		{
-			return File.Exists(path);
-		}
+        public void CreateFile()
+        {
+            if (!FileExists())
+                using (File.Create(path)) ;
+        }
 
-		public Student AppendStudent(Student student, string cadena)
-		{
-			if (!GetIds().Contains(student.Id))
-			{
-				using (StreamWriter streamWriter = File.AppendText(path))
-				{
-					streamWriter.WriteLine(cadena);
-					return student;
-				}
-			}
-			logger.Error(student);
-			return null;
-		}
-		public List<int> GetIds()
-		{
-			string[] array = File.ReadAllLines(path);
-			List<int> list = new List<int>();
-			foreach (var line in array)
-			{
-				string[] values = line.Trim().Split(',');
-				list.Add(int.Parse(values[0]));
-			}
-			return list;
-		}
+        public bool FileExists()
+        {
+            if (File.Exists(path))
+            {
+                return true;
+            }
+            return false;
+        }
 
-	}
+        public  Student AppendStudent(Student student)
+        {
+            if (!GetIds().Contains(student.Id))
+            {
+                using (StreamWriter streamWriter = File.AppendText(path))
+                {
+                    streamWriter.WriteLine(student.Id + ", " + student.Name.Trim() + ", " +
+                        student.Surname.Trim() + ", " + student.DateOfBirth.ToString("dd/MM/yyyy"));
+
+                    return student;
+                }
+            }
+            return null;
+        }
+
+        public List<int> GetIds()
+        {
+            string[] array = File.ReadAllLines(path);
+            List<int> list = new List<int>();
+            foreach (var line in array)
+            {
+                string[] values = line.Trim().Split(',');
+                list.Add(int.Parse(values[0]));
+            }
+            return list;
+        }
+
+    }
 }

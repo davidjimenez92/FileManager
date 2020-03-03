@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Windows.Documents;
 using FileManager.Common.Layer;
 using Newtonsoft.Json;
 
@@ -13,7 +10,7 @@ namespace FileManager.DataAccess.Data
 
 	public class JsonFile : VuelingFile
 	{
-		private readonly string path = ConfigurationManager.AppSettings.Get("jsonFile");
+		private new readonly string path = ConfigurationManager.AppSettings.Get("jsonFile");
 		public override Student Add(Student student)
 		{
 
@@ -88,7 +85,7 @@ namespace FileManager.DataAccess.Data
 			return student;
 		}
 
-		public override List<Student> Get()
+		public override List<Student> GetAll()
 		{
 			if (File.Exists(path))
 			{

@@ -9,56 +9,53 @@ namespace FileManager.DataAccess.Data
 {
 	public class TxtFile : VuelingFile
 	{
+		public new static readonly string path = ConfigurationManager.AppSettings.Get("txtFile");
 		private static readonly ILog logger = LogManager.GetLogger(typeof(TxtFile));
-		private readonly TxtUtil txtUtil = new TxtUtil();
+
+		private readonly TxtUtil txtUtil = new TxtUtil(path);
 
 		public override Student Add(Student student)
 		{
-			string cadena = student.Id + ", " + student.Name.Trim() + ", " + student.Surname.Trim() + ", " + student.DateOfBirth.ToString("dd/MM/yyyy");
-
 			txtUtil.CreateFile();
-			student = txtUtil.AppendStudent(student, cadena);
+			student = txtUtil.AppendStudent(student);
 
-			logger.Info(student);
 			return student;
 		}
 
 		public override bool Delete(Student student)
 		{
-			if (File.Exists(path))
+			txtUtil.FileExists();
+
+			List<Student> lista = GetAll();
+			if (txtUtil.GetIds().Contains(student.Id))
 			{
-				List<Student> lista = Get();
-				if (txtUtil.GetIds().Contains(student.Id))
+				int studentOfList = GetAll().FindIndex(std => std.Id == student.Id);
+				lista.RemoveAt(studentOfList);
+				File.Delete(path);
+				foreach (var item in lista)
 				{
-					int studentOfList = Get().FindIndex(std => std.Id == student.Id);
-					lista.RemoveAt(studentOfList);
-					System.IO.File.Delete(path);
-					foreach (var item in lista)
-					{
-						Add(item);
-					}
-					logger.Info("Student: " + student.Id + " Deleted");
-					return true;
+					Add(item);
 				}
+				logger.Info("Student: " + student.Id + " Deleted");
+				return true;
 			}
 
 			return false;
 		}
 
-		public override List<Student> Get()
+		public override List<Student> GetAll()
 		{
 			List<Student> list = new List<Student>();
-			if (txtUtil.IsFileExist())
+			if (!File.Exists(path))
+				return list;
+			using (StreamReader streamReader = new StreamReader(path))
 			{
-				using (StreamReader streamReader = new StreamReader(path))
+				while (!streamReader.EndOfStream)
 				{
-					while (!streamReader.EndOfStream)
-					{
-						string[] values = streamReader.ReadLine().Split(',');
-						Student student = new Student(int.Parse(values[0]), values[1], values[2], DateTime.Parse(values[3]));
-						list.Add(student);
-						logger.Info(student);
-					}
+					string[] values = streamReader.ReadLine().Split(',');
+					Student student = new Student(int.Parse(values[0]), values[1], values[2], DateTime.Parse(values[3]));
+					list.Add(student);
+					logger.Info("Student: " + student.ToString());
 				}
 			}
 
@@ -67,28 +64,25 @@ namespace FileManager.DataAccess.Data
 
 		public override Student Update(Student student)
 		{
-			if (File.Exists(path))
+			if (!File.Exists(path))
+				return null;
+			List<Student> list = GetAll();
+			if (txtUtil.GetIds().Contains(student.Id))
 			{
-				List<Student> lista = Get();
-				if (txtUtil.GetIds().Contains(student.Id))
+				int studentIndex = GetAll().FindIndex(std => std.Id == student.Id);
+				list.RemoveAt(studentIndex);
+				list.Add(student);
+				File.Delete(path);
+				foreach (var item in list)
 				{
-					int studentOfList = Get().FindIndex(std => std.Id == student.Id);
-					lista.RemoveAt(studentOfList);
-					lista.Add(student);
-					File.Delete(path);
-					foreach (var item in lista)
-					{
-						Add(item);
-					}
-					logger.Info(student);
-					return student;
+					Add(item);
 				}
+				logger.Info("Student: " + student.ToString() + " updated");
+				return student;
 			}
 
 			return null;
 		}
 
-
-		
 	}
 }

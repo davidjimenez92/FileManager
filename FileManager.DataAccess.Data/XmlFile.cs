@@ -10,22 +10,22 @@ namespace FileManager.DataAccess.Data
 {
 	public class XmlFile : VuelingFile
 	{
-		public readonly string path = ConfigurationManager.AppSettings.Get("xmlFile");
+		public static readonly string path = ConfigurationManager.AppSettings.Get("xmlFile");
 		private static readonly ILog logger = LogManager.GetLogger(typeof(XmlFile));
 
-		private XmlUtil xmlUtil = new XmlUtil();
+		private XmlUtil xmlUtil = new XmlUtil(path);
 
 		public override Student Add(Student student)
 		{
-			xmlUtil.CreateFile();
-			student = xmlUtil.AppendStudent(student);
+			xmlUtil.CreateFile(path);
+			xmlUtil.AppendStudent(student, path);
 
-			return student;
+			return xmlUtil.GetLastStudent(path);
 		}
 
 		public override bool Delete(Student student)
 		{
-			XDocument doc = xmlUtil.LoadFile();
+			var doc = xmlUtil.LoadFile(path);
 			if (doc != null)
 			{
 				XElement element = doc.Root.Elements("Student").SingleOrDefault(e => e.Element("Id").Value.Equals(student.Id.ToString()));
@@ -36,9 +36,9 @@ namespace FileManager.DataAccess.Data
 			return false;
 		}
 
-		public override List<Student> Get()
+		public override List<Student> GetAll()
 		{
-			XDocument doc = xmlUtil.LoadFile();
+			XDocument doc = xmlUtil.LoadFile(path);
 			List<Student> list = new List<Student>();
 			if (doc != null)
 			{
@@ -54,20 +54,19 @@ namespace FileManager.DataAccess.Data
 
 		public override Student Update(Student student)
 		{
-			XDocument doc = xmlUtil.LoadFile();
-			if (doc != null)
-			{
-				IEnumerable<XElement> list = doc.Root.Elements("Student").Where(e => e.Element("Id").Value.Equals(student.Id.ToString()));
+			XDocument doc = xmlUtil.LoadFile(path);
 
-				list.Elements("Name").FirstOrDefault().Value = student.Name;
-				list.Elements("Surname").FirstOrDefault().Value = student.Surname;
-				list.Elements("DateOfBirth").FirstOrDefault().Value = student.DateOfBirth.ToString("dd/MM/yyyy");
+			XElement element = doc.Root.Elements("Student").SingleOrDefault(e => e.Element("Id").Value.Equals(student.Id.ToString()));
 
-				doc.Save(path);
-				return student;
-			}
-			logger.Info(student);
-			return null;
+			element.Element("Name").Value = student.Name;
+			element.Element("Surname").Value = student.Surname;
+			element.Element("DateOfBirth").Value = student.DateOfBirth.ToString("dd/MM/yyyy");
+
+			Student studentUpdated = new Student(student.Id, element.Element("Name").Value, element.Element("Surname").Value,
+				DateTime.Parse(element.Element("DateOfBirth").Value));
+
+			doc.Save(path);
+			return studentUpdated;
 
 		}
 

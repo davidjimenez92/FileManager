@@ -12,6 +12,7 @@ namespace FileManager.Common.Layer
 		public string Name { get; }
 		public string Surname { get; }
 		public DateTime DateOfBirth { get; }
+		public Guid Guid { get; set; }
 
 		public Student(int id, string name, string surname, DateTime dateOfBirth)
 		{

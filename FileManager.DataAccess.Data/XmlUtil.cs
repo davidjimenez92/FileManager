@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using FileManager.Common.Layer;
 using log4net;
@@ -10,10 +12,15 @@ namespace FileManager.DataAccess.Data
 {
 	public class XmlUtil
 	{
-		private readonly string path = ConfigurationManager.AppSettings.Get("xmlFile");
 		private static readonly ILog logger = LogManager.GetLogger(typeof(XmlUtil));
+		private readonly string path;
 
-		public XDocument LoadFile()
+		public XmlUtil(string path)
+		{
+			this.path = path;
+		}
+
+		public XDocument LoadFile(string path)
 		{
 			try
 			{
@@ -27,22 +34,31 @@ namespace FileManager.DataAccess.Data
 			}
 		}
 
-		public void CreateFile()
+		public void CreateFile(string path)
 		{
-			if(!IsFileExist())
-				new XDocument(new XElement("Students")).Save(path);
+			if (!IsFileExist(path))
+				try
+				{
+					new XDocument(new XElement("Students")).Save(path);
+				}
+				catch (ArgumentNullException ane)
+				{
+					logger.Error(path);
+					logger.Error(ane.Message);
+					throw ane;
+				}
 		}
 
-		public bool IsFileExist()
+		public bool IsFileExist(string path)
 		{
 			return File.Exists(path);
 		}
 
-		public Student AppendStudent(Student student)
+		public Student AppendStudent(Student student, string path)
 		{
-			if (!GetIds().Contains(student.Id))
+			if (!GetIds(path).Contains(student.Id))
 			{
-				XDocument doc = LoadFile();
+				XDocument doc = LoadFile(path);
 				if (doc != null)
 				{
 					XElement child = CreateStudentXml(new XElement("Student"), student);
@@ -57,6 +73,15 @@ namespace FileManager.DataAccess.Data
 			return null;
 		}
 
+		public Student GetLastStudent(string path)
+		{
+			XElement element = LoadFile(path).Root.Elements("Student").Last();
+			Student student = new Student(int.Parse(element.Element("Id").Value), element.Element("Name").Value,
+				element.Element("Surname").Value, DateTime.Parse(element.Element("DateOfBirth").Value));
+
+			return student;
+		}
+
 		private XElement CreateStudentXml(XElement element, Student student)
 		{
 			element.Add(new XElement("Id", student.Id));
@@ -66,15 +91,16 @@ namespace FileManager.DataAccess.Data
 
 			return element;
 		}
-		private List<int> GetIds()
+		private List<int> GetIds(string path)
 		{
 			List<int> list = new List<int>();
-			XDocument doc = LoadFile();
+			XDocument doc = LoadFile(path);
 			foreach (var item in doc.Element("Students").Elements("Student").Elements("Id"))
 			{
 				list.Add(int.Parse(item.Value));
 			}
 			return list;
 		}
+
 	}
 }
