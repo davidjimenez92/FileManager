@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Windows.Forms;
 using FileManager.Common.Layer;
@@ -9,7 +12,7 @@ namespace FileManager.Presentation.WinSite
 {
 	public partial class Form1 : Form
 	{
-		private const string TITLE = "File Manager";
+		private const string TITLE = "FILE MANAGER";
 
 		public Form1()
 		{
@@ -27,139 +30,65 @@ namespace FileManager.Presentation.WinSite
 
 		private void BtnSave_Click(object sender, EventArgs e)
 		{
-
 			Student student = CreateStudent();
-			if (student != null)
+			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+
+			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
+			VuelingFile file = factory.Create(ty);
+			if (file.Add(student) != null)
 			{
-				try
-				{
-					switch (cbType.SelectedItem.ToString())
-					{
-						case "TXT":
-							StudentDao txtfactory = new TxtFactory();
-							var studentTxt = txtfactory.Add(student);
-							if (studentTxt != null)
-								MessageBox.Show(studentTxt + " added", TITLE);
-							else
-								MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
-							break;
-						case "XML":
-							StudentDao xmlFactory = new XmlFactory();
-							var studentXml = xmlFactory.Add(student);
-							if (studentXml != null)
-								MessageBox.Show(studentXml + " added", TITLE);
-							else
-								MessageBox.Show("Student: " + student.Id + " already exists", TITLE);
-							break;
-						case "JSON":
-							MessageBox.Show("Not implemented", TITLE);
-							break;
-						default:
-							break;
-					}
-				}
-				catch (NullReferenceException nre)
-				{
-					cbType.Focus();
-					MessageBox.Show("Select someone type", TITLE);
-				}
+				MessageBox.Show("Student: " + student.Id + " added", TITLE);
+			}
+			else
+			{
+				MessageBox.Show("Student: " + student.Id + " can not added", TITLE);
 			}
 		}
 
 		private void BtnRead_Click(object sender, EventArgs e)
 		{
-			try
-			{
-				switch (cbType.SelectedItem.ToString())
-				{
-					case "TXT":
-						StudentDao txtFactory = new TxtFactory();
-						ShowStudents(txtFactory.Get());
-						break;
-					case "XML":
-						StudentDao xmlFactory = new XmlFactory();
-						ShowStudents(xmlFactory.Get());
-						break;
-					case "JSON":
-						MessageBox.Show("Not implemented", TITLE);
-						break;
-					default:
-						break;
-				}
-			}
-			catch (NullReferenceException nre)
-			{
-				cbType.Focus();
-				MessageBox.Show("Select someone type", TITLE);
-			}
+			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+
+			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
+			VuelingFile file = factory.Create(ty);
+			ShowStudents(file.Get());
+
 		}
 
 		private void BtnUpdate_Click(object sender, EventArgs e)
 		{
-			Student student = new Student(int.Parse(tbId.Text), tbName.Text, tbSurname.Text, dpDate.Value);
-			try
+			Student student = CreateStudent();
+			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+
+			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
+			VuelingFile file = factory.Create(ty);
+			if (file.Update(student) != null)
 			{
-				switch (cbType.SelectedItem.ToString())
-				{
-					case "TXT":
-						StudentDao txtFactory = new TxtFactory();
-						var resultTxt = txtFactory.Update(student);
-						if (resultTxt != null)
-							MessageBox.Show("Student id: " + student.Id + " updated", "File Manager");
-						break;
-					case "XML":
-						StudentDao xmlFactory = new XmlFactory();
-						var resultXml = xmlFactory.Update(student);
-						if (resultXml != null)
-							MessageBox.Show("Student id: " + student.Id + " updated", "File Manager");
-						break;
-					case "JSON":
-						MessageBox.Show("Not implemented", TITLE);
-						break;
-					default:
-						break;
-				}
+				MessageBox.Show("Student: " + student.Id + " updated", TITLE);
 			}
-			catch (NullReferenceException nre)
+			else
 			{
-				cbType.Focus();
-				MessageBox.Show("Select someone type", TITLE);
+				MessageBox.Show("Student: " + student.Id + " can not update", TITLE);
 			}
+
 		}
 
 		private void BtnDelete_Click(object sender, EventArgs e)
 		{
-			Student student = new Student(int.Parse(tbId.Text));
-			try
+			Student student = CreateStudent();
+			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+
+			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
+			VuelingFile file = factory.Create(ty);
+			if (file.Delete(student))
 			{
-				switch (cbType.SelectedItem.ToString())
-				{
-					case "TXT":
-						StudentDao txtFactory = new TxtFactory();
-						if (txtFactory.Delete(student))
-							MessageBox.Show("Student id: " + student.Id + " deleted", "File Manager");
-						else
-							MessageBox.Show("Student id: " + student.Id + " can not delete", "File Manager");
-						break;
-					case "XML":
-						StudentDao xmlFactory = new XmlFactory();
-						if (xmlFactory.Delete(student))
-							MessageBox.Show("Student id: " + student.Id + " deleted", "File Manager");
-						else
-							MessageBox.Show("Student id: " + student.Id + " can not delete", "File Manager");
-						break;
-					case "JSON":
-						MessageBox.Show("Not implemented", TITLE);
-						break;
-					default:
-						break;
-				}
+				MessageBox.Show("Student: " + student.Id + " deleted", TITLE);
 			}
-			catch (NullReferenceException nre)
+			else
 			{
-				cbType.Focus();
-				MessageBox.Show("Select someone type", TITLE);
+				MessageBox.Show("Student: " + student.Id + " can not delete", TITLE);
 			}
+
 		}
 
 		private void ShowStudents(List<Student> list)
@@ -185,6 +114,15 @@ namespace FileManager.Presentation.WinSite
 				MessageBox.Show(tbId.Text + " is a invalid id, try with another id", "File Manager");
 				return null;
 			}
+		}
+
+		private void SelectFile()
+		{
+			Student student = CreateStudent();
+			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+
+			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
+			VuelingFile file = factory.Create(ty);
 		}
 	}
 }
