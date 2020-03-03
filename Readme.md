@@ -9,6 +9,6 @@ In this project, I tried apply Abstract Factory patter. In a first moment, I was
 that classes create a **product** (txt file, xml file or json file) to save [Student](https://github.com/davidjimenez92/FileManager/blob/master/FileManager.Common.Layer/Student.cs) objects.
 
 ## Technology stack
-`C# | .Net Framework`
+`Visual Studio 2019 Comunity editio | C# | .Net Framework`
 ## Author
 [David Jiménez Miguel](https://github.com/davidjimenez92)
