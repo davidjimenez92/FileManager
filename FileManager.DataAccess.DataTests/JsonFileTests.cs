@@ -39,19 +39,28 @@ namespace FileManager.DataAccess.Data.Tests
 		[TestMethod()]
 		public void DeleteTest()
 		{
-			Assert.Fail();
-		}
-
-		[TestMethod()]
-		public void UpdateTest()
-		{
-			Assert.Fail();
+			jsonFile.Add(student);
+			var result = jsonFile.Delete(student);
+			Assert.IsTrue(result);
 		}
 
 		[TestMethod()]
 		public void GetTest()
 		{
-			Assert.Fail();
+			jsonFile.Add(student);
+			jsonFile.Add(new Student(2, "David", "Jimenez", new DateTime(1992, 6, 24)));
+			jsonFile.Add(new Student(3, "David", "Jimenez", new DateTime(1992, 6, 24)));
+			var result = jsonFile.GetAll();
+			Assert.IsTrue(result.Count == 3);
+		}
+
+		[TestMethod()]
+		public void UpdateTest()
+		{
+			Student studentToUpdate = new Student(1, "David", "Prueba", new DateTime(1994, 7, 24));
+			jsonFile.Add(student);
+			var spected = jsonFile.Update(studentToUpdate);
+			Assert.AreEqual(spected.ToString(), studentToUpdate.ToString());
 		}
 	}
 }

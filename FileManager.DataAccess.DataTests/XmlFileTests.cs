@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FileManager.DataAccess.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using FileManager.Common.Layer;
 using System.Configuration;
 using System.IO;
@@ -10,7 +7,7 @@ using System.IO;
 namespace FileManager.DataAccess.Data.Tests
 {
 	[TestClass()]
-	public class XmlFactoryTests
+	public class XmlFileTests
 	{
 		public static string path = ConfigurationManager.AppSettings["xmlFile"].ToString();
 		public static XmlFile xmlFile;
@@ -21,12 +18,6 @@ namespace FileManager.DataAccess.Data.Tests
 		{
 			xmlFile = new XmlFile();
 			student = new Student(1, "David", "Jimenez", new DateTime(1992, 6, 24));
-		}
-
-		[TestCleanup]
-		public void TearDown()
-		{
-			File.Delete(path);
 		}
 		[TestMethod()]
 		public void AddTest()
@@ -49,7 +40,7 @@ namespace FileManager.DataAccess.Data.Tests
 			xmlFile.Add(student);
 			xmlFile.Add(new Student(2, "David", "Jimenez", new DateTime(1992, 6, 24)));
 			xmlFile.Add(new Student(3, "David", "Jimenez", new DateTime(1992, 6, 24)));
-			var result = xmlFile.GetAll();
+			var result = xmlFile.Get();
 			Assert.IsTrue(result.Count == 3);
 		}
 
