@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FileManager.Common.Layer;
 
 namespace FileManager.DataAccess.Data
 {
@@ -16,6 +11,11 @@ namespace FileManager.DataAccess.Data
 				return new FileFactory();
 			}
 			return null;
+		}
+
+		public static IAbstractFactory GetFactory(object productName)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

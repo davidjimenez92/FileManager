@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Resources;
 using System.Text;
 using System.Windows.Forms;
+using FileManager.Business.layer;
 using FileManager.Common.Layer;
-using FileManager.DataAccess.Data;
 
 namespace FileManager.Presentation.WinSite
 {
@@ -31,75 +28,40 @@ namespace FileManager.Presentation.WinSite
 		private void BtnSave_Click(object sender, EventArgs e)
 		{
 			Student student = CreateStudent();
-			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
-			VuelingFile file = factory.Create(ty);
-			if (file.Add(student) != null)
-			{
-				MessageBox.Show("Student: " + student.Id + " added", TITLE);
-			}
-			else
-			{
-				MessageBox.Show("Student: " + student.Id + " can not added", TITLE);
-			}
+			Class1 business = new Class1();
+			MessageBox.Show(business.SaveStudent(this.ProductName, type, student));
 		}
 
 		private void BtnRead_Click(object sender, EventArgs e)
 		{
-			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
-			VuelingFile file = factory.Create(ty);
-			ShowStudents(file.GetAll());
+			Class1 business = new Class1();
+			MessageBox.Show(business.GetAllStudents(this.ProductName, type));
 
 		}
 
 		private void BtnUpdate_Click(object sender, EventArgs e)
 		{
 			Student student = CreateStudent();
-			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
-			VuelingFile file = factory.Create(ty);
-			if (file.Update(student) != null)
-			{
-				MessageBox.Show("Student: " + student.Id + " updated", TITLE);
-			}
-			else
-			{
-				MessageBox.Show("Student: " + student.Id + " can not update", TITLE);
-			}
+			Class1 business = new Class1();
+			MessageBox.Show(business.UpdateStudent(this.ProductName, type, student));
 
 		}
 
 		private void BtnDelete_Click(object sender, EventArgs e)
 		{
 			Student student = CreateStudent();
-			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
+			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
-			VuelingFile file = factory.Create(ty);
-			if (file.Delete(student))
-			{
-				MessageBox.Show("Student: " + student.Id + " deleted", TITLE);
-			}
-			else
-			{
-				MessageBox.Show("Student: " + student.Id + " can not delete", TITLE);
-			}
-
+			Class1 business = new Class1();
+			MessageBox.Show(business.DeleteStudent(this.ProductName, type, student));
 		}
 
-		private void ShowStudents(List<Student> list)
-		{
-			StringBuilder message = new StringBuilder();
-			foreach (var item in list)
-			{
-				message.Append(item + "\n");
-			}
-			MessageBox.Show(message.ToString(), TITLE);
-		}
 
 		private Student CreateStudent()
 		{
@@ -116,13 +78,5 @@ namespace FileManager.Presentation.WinSite
 			}
 		}
 
-		private void SelectFile()
-		{
-			Student student = CreateStudent();
-			EnumTypes ty = (EnumTypes)cbType.SelectedItem;
-
-			IAbstractFactory factory = FactoryProvider.GetFactory(this.ProductName);
-			VuelingFile file = factory.Create(ty);
-		}
 	}
 }

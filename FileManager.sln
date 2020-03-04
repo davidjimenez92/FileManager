@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation Tier", "Presentation Tier", "{449315F3-7AF5-4B15-BE91-EFBADF94AF37}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common Tier", "Common Tier", "{0D1D7E17-0179-4B67-A4B8-3FEE812EAD85}"
+	ProjectSection(SolutionItems) = preProject
+		FileManager.DataAccess.Data\EnumTypes.cs = FileManager.DataAccess.Data\EnumTypes.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess Tier", "DataAccess Tier", "{03C68686-32AE-4B8E-884F-7A775CC460B3}"
 EndProject
@@ -18,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileManager.DataAccess.DataTests", "FileManager.DataAccess.DataTests\FileManager.DataAccess.DataTests.csproj", "{AA31260E-E279-4A95-A92B-71E01F51C59F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business Tier", "Business Tier", "{1556C27A-B4A9-4C2C-9F24-85E66D24D682}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileManager.Business.Logic", "FileManager.Business.layer\FileManager.Business.Logic.csproj", "{0A0DC9F3-9989-48C8-94BB-4E2515F1F127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +46,10 @@ Global
 		{AA31260E-E279-4A95-A92B-71E01F51C59F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA31260E-E279-4A95-A92B-71E01F51C59F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA31260E-E279-4A95-A92B-71E01F51C59F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A0DC9F3-9989-48C8-94BB-4E2515F1F127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A0DC9F3-9989-48C8-94BB-4E2515F1F127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A0DC9F3-9989-48C8-94BB-4E2515F1F127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A0DC9F3-9989-48C8-94BB-4E2515F1F127}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +58,7 @@ Global
 		{DC3B93AD-C36F-4C95-9FC5-0CD4DCC4A56B} = {449315F3-7AF5-4B15-BE91-EFBADF94AF37}
 		{FD33F7F3-FAC6-47A6-9978-82E6E37BD6E5} = {03C68686-32AE-4B8E-884F-7A775CC460B3}
 		{FAB1EFF2-147B-4814-930D-1681942AAA17} = {0D1D7E17-0179-4B67-A4B8-3FEE812EAD85}
+		{0A0DC9F3-9989-48C8-94BB-4E2515F1F127} = {1556C27A-B4A9-4C2C-9F24-85E66D24D682}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F49EFA0-CCFA-443E-809A-3D1270C3AC9D}

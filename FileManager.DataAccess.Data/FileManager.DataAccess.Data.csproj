@@ -50,9 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAbstractFactory.cs" />
-    <Compile Include="EnumTypes.cs" />
     <Compile Include="FactoryProvider.cs" />
     <Compile Include="FileFactory.cs" />
+    <Compile Include="JsonUtil.cs" />
     <Compile Include="TxtUtil.cs" />
     <Compile Include="VuelingFile.cs" />
     <Compile Include="JsonFile.cs" />
