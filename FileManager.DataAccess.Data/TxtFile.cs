@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using FileManager.Common.Layer;
 using log4net;
@@ -9,7 +10,7 @@ namespace FileManager.DataAccess.Data
 {
 	public class TxtFile : VuelingFile
 	{
-		public new static readonly string path = ConfigurationManager.AppSettings.Get("txtFile");
+		public new static readonly string path = Environment.GetEnvironmentVariable("txtFile", EnvironmentVariableTarget.Machine).ToString();
 		private static readonly ILog logger = LogManager.GetLogger(typeof(TxtFile));
 
 		private readonly TxtUtil txtUtil = new TxtUtil(path);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -10,7 +11,7 @@ namespace FileManager.DataAccess.Data
 
 	public class JsonFile : VuelingFile
 	{
-		private new readonly string path = ConfigurationManager.AppSettings.Get("jsonFile");
+		private new readonly string path = Environment.GetEnvironmentVariable("jsonFile", EnvironmentVariableTarget.Machine).ToString();
 		public override Student Add(Student student)
 		{
 
@@ -45,60 +46,61 @@ namespace FileManager.DataAccess.Data
 
 		public override bool Delete(Student student)
 		{
-			if (File.Exists(path))
+			if (!File.Exists(path))
+				return false;
+
+			var jsonString = "";
+			using (StreamReader reader = new StreamReader(path))
 			{
-				var jsonString = "";
-				using (StreamReader reader = new StreamReader(path))
-				{
-					jsonString = reader.ReadToEnd();
-				}
-				List<Student> studentsList = JsonConvert.DeserializeObject<List<Student>>(jsonString);
-				Student studentToRemove = studentsList.Find(x => x.Id == student.Id);
-				studentsList.Remove(studentToRemove);
-
-				var json = JsonConvert.SerializeObject(studentsList);
-				File.WriteAllText(path, json);
-
-				return true;
+				jsonString = reader.ReadToEnd();
 			}
-			return false;
+			List<Student> studentsList = JsonConvert.DeserializeObject<List<Student>>(jsonString);
+			Student studentToRemove = studentsList.Find(x => x.Id == student.Id);
+			studentsList.Remove(studentToRemove);
+
+			var json = JsonConvert.SerializeObject(studentsList);
+			File.WriteAllText(path, json);
+
+			return true;
+
 		}
 
 		public override Student Update(Student student)
 		{
-			if (File.Exists(path))
+			if (!File.Exists(path))
+				return null;
+
+			var jsonString = "";
+			using (StreamReader reader = new StreamReader(path))
 			{
-				var jsonString = "";
-				using (StreamReader reader = new StreamReader(path))
-				{
-					jsonString = reader.ReadToEnd();
-				}
-				List<Student> studentsList = JsonConvert.DeserializeObject<List<Student>>(jsonString);
-				Student studentToRemove = studentsList.Find(x => x.Id == student.Id);
-				studentsList.Remove(studentToRemove);
-
-				studentsList.Add(student);
-
-				var json = JsonConvert.SerializeObject(studentsList);
-				File.WriteAllText(path, json);
+				jsonString = reader.ReadToEnd();
 			}
+			List<Student> studentsList = JsonConvert.DeserializeObject<List<Student>>(jsonString);
+			Student studentToRemove = studentsList.Find(x => x.Id == student.Id);
+			studentsList.Remove(studentToRemove);
+
+			studentsList.Add(student);
+
+			var json = JsonConvert.SerializeObject(studentsList);
+			File.WriteAllText(path, json);
+
 			return student;
 		}
 
 		public override List<Student> GetAll()
 		{
-			if (File.Exists(path))
-			{
-				var jsonString = "";
-				using (var reader = new StreamReader(path))
-				{
-					jsonString = reader.ReadToEnd();
-				}
-				var studentsList = JsonConvert.DeserializeObject<List<Student>>(jsonString);
+			if (!File.Exists(path))
+				return new List<Student>();
 
-				return studentsList;
+			var jsonString = "";
+			using (var reader = new StreamReader(path))
+			{
+				jsonString = reader.ReadToEnd();
 			}
-			return null;
+			var studentsList = JsonConvert.DeserializeObject<List<Student>>(jsonString);
+
+			return studentsList;
+
 		}
 	}
 }

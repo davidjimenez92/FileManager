@@ -10,7 +10,7 @@ namespace FileManager.DataAccess.Data
 {
 	public class XmlFile : VuelingFile
 	{
-		public static readonly string path = ConfigurationManager.AppSettings.Get("xmlFile");
+		public static readonly string path = Environment.GetEnvironmentVariable("xmlFile", EnvironmentVariableTarget.Machine).ToString();
 		private static readonly ILog logger = LogManager.GetLogger(typeof(XmlFile));
 
 		private XmlUtil xmlUtil = new XmlUtil(path);
