@@ -61,10 +61,11 @@ namespace FileManager.Business.layer
             }
         }
 
-        private List<Student> GetAllWithAge(List<Student> list)
+        private Dictionary<Student, int> GetAllWithAge(List<Student> list)
         {
-
-            var result = list.Select(student => { student.Age = CalculateAge(student); return student;  }).ToList();
+            Dictionary<Student, int> result = list
+                .Select(student => new KeyValuePair<Student, int>(student, CalculateAge(student)))
+                .ToDictionary(x => x.Key, x => x.Value);
             return result;
         }
 
@@ -75,12 +76,12 @@ namespace FileManager.Business.layer
             int age = (now - date) / 10000;
             return age;
         }
-        private string ShowStudents(List<Student> list)
+        private string ShowStudents(Dictionary<Student, int> dictionary)
         {
             StringBuilder message = new StringBuilder();
-            foreach (var item in list)
+            foreach (var item in dictionary)
             {
-                message.Append(item + ", Age: " + item.Age + "\n");
+                message.Append(item.Key + ", Age: " + item.Value + "\n");
             }
             return message.ToString();
         }

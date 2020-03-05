@@ -30,7 +30,7 @@ namespace FileManager.Presentation.WinSite
 			Student student = CreateStudent();
 			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			Class1 business = new Class1();
+			StudentBLL business = new StudentBLL();
 			MessageBox.Show(business.SaveStudent(this.ProductName, type, student));
 		}
 
@@ -38,7 +38,7 @@ namespace FileManager.Presentation.WinSite
 		{
 			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			Class1 business = new Class1();
+			StudentBLL business = new StudentBLL();
 			MessageBox.Show(business.GetAllStudents(this.ProductName, type));
 
 		}
@@ -48,7 +48,7 @@ namespace FileManager.Presentation.WinSite
 			Student student = CreateStudent();
 			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			Class1 business = new Class1();
+			StudentBLL business = new StudentBLL();
 			MessageBox.Show(business.UpdateStudent(this.ProductName, type, student));
 
 		}
@@ -58,7 +58,7 @@ namespace FileManager.Presentation.WinSite
 			Student student = CreateStudent();
 			EnumTypes type = (EnumTypes)cbType.SelectedItem;
 
-			Class1 business = new Class1();
+			StudentBLL business = new StudentBLL();
 			MessageBox.Show(business.DeleteStudent(this.ProductName, type, student));
 		}
 

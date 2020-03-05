@@ -24,7 +24,7 @@ namespace FileManager.Common.Layer
 
 		public override string ToString()
 		{
-			return "id: " + Id + ", Name: " + Name + ", Surname: " + Surname + ", Date of birht: " + DateOfBirth.ToString("dd/MM/yyyy"); 
+			return "GUID: "+ Guid + ", id: " + Id + ", Name: " + Name + ", Surname: " + Surname + ", Date of birht: " + DateOfBirth.ToString("dd/MM/yyyy"); 
 		}
 	}
 }

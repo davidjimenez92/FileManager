@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation Tier", "Presentation Tier", "{449315F3-7AF5-4B15-BE91-EFBADF94AF37}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common Tier", "Common Tier", "{0D1D7E17-0179-4B67-A4B8-3FEE812EAD85}"
-	ProjectSection(SolutionItems) = preProject
-		FileManager.DataAccess.Data\EnumTypes.cs = FileManager.DataAccess.Data\EnumTypes.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess Tier", "DataAccess Tier", "{03C68686-32AE-4B8E-884F-7A775CC460B3}"
 EndProject
