@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using FileManager.Common.Layer;
 using FileManager.DataAccess.Data;
 
 namespace FileManager.Business.layer
 {
-    public class Class1
+    public class StudentBLL
     {
         public string SaveStudent(string name, EnumTypes type, Student student)
         {
@@ -41,7 +42,8 @@ namespace FileManager.Business.layer
         {
             IAbstractFactory factory = FactoryProvider.GetFactory(name);
             VuelingFile file = factory.Create(type);
-            return ShowStudents(file.GetAll());
+            List<Student> list = file.GetAll();
+            return ShowStudents(GetAllWithAge(list));
            
         }
 
@@ -59,12 +61,26 @@ namespace FileManager.Business.layer
             }
         }
 
+        private List<Student> GetAllWithAge(List<Student> list)
+        {
+
+            var result = list.Select(student => { student.Age = CalculateAge(student); return student;  }).ToList();
+            return result;
+        }
+
+        private int CalculateAge(Student student)
+        {
+            int now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            int date = int.Parse(student.DateOfBirth.ToString("yyyyMMdd"));
+            int age = (now - date) / 10000;
+            return age;
+        }
         private string ShowStudents(List<Student> list)
         {
             StringBuilder message = new StringBuilder();
             foreach (var item in list)
             {
-                message.Append(item + "\n");
+                message.Append(item + ", Age: " + item.Age + "\n");
             }
             return message.ToString();
         }
